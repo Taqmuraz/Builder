@@ -9,6 +9,7 @@ public class Program
     static Text buildScript = r -> new WindowsBuildScript().read(r);
     static Text runScript = new RunScript();
     static Text extension = new StringText(".bat");
+    static Text os_name = new StringText("windows");
     static Text inputBinary = new StringText(".");
 
     public static void main(String[] args)
@@ -24,20 +25,16 @@ public class Program
                 new SpecifiedArgumentAction("target", arg -> target = arg),
                 new SpecifiedArgumentAction("name", arg -> outputBinary = arg),
                 new SpecifiedArgumentAction("jar-input", arg -> inputBinary = arg),
-                new FlagArgumentAction("windows", () ->
-                {
-                    buildScript = new WindowsBuildScript();
-                    extension = new StringText(".bat");
-                }),
                 new FlagArgumentAction("linux", () ->
                 {
-                    buildScript = new LinuxBuildScript();
+                    buildScript = r -> new LinuxBuildScript().read(r);
+                    os_name = new StringText("linux");
                 })
             );
             for(String arg : args) argumentAction.call(arg);
 
-            new SaveFileTextAction(new ConcatText(new StringText("build"), extension), errorPrinter).call(buildScript);
-            new SaveFileTextAction(new ConcatText(new StringText("run"), extension), errorPrinter).call(runScript);
+            new SaveFileTextAction(new ConcatText(new StringText("build_"), os_name, extension), errorPrinter).call(buildScript);
+            new SaveFileTextAction(new ConcatText(new StringText("run_"), os_name, extension), errorPrinter).call(runScript);
         }
         catch(Throwable error)
         {
