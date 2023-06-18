@@ -25,7 +25,7 @@ class WindowsBuildScript implements Text
                 new StringText("-source "),
                 Program.target,
                 new StringText("-classpath"),
-                Program.classPath,
+                new ConcatText(Program.classPath, new StringText("/*")),
                 new StringText("-d"),
                 Program.outputPath,
                 new StringText("@build/sourcelist.txt")),
@@ -42,7 +42,7 @@ class WindowsBuildScript implements Text
                 new CharText(' '),
                 Arrays.stream(libs)
                     .map(StringText::new)
-                    .map(t -> new ConcatText(new StringText("../"), t))
+                    .map(t -> new PathText(new StringText(".."), Program.classPath, t))
                     .toArray(Text[]::new));
             classpath = new JoinText(new CharText(' '), new StringText("& echo Class-Path:"), names);
         }

@@ -1,7 +1,7 @@
 public class Program
 {
     static Text sourcePath = new StringText(".");
-    static Text classPath = new StringText("lib/*");
+    static Text classPath = new StringText("lib");
     static Text mainClass = new StringText("Program");
     static Text outputPath = new StringText("build");
     static Text outputBinary = new StringText("build");
